@@ -1,0 +1,32 @@
+<div class="navbar">
+    <p-toolbar>
+        <ng-template pTemplate="start">
+        </ng-template>
+        <ng-template pTemplate="center">
+            <div class="align-items-center">
+                <h1>SignUp</h1>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="end">
+            <div class="flex align-items-end user-access">
+                <button pButton id="log" label="Login" icon="pi pi-user" (click)="login()"></button>
+            </div>
+        </ng-template>
+    </p-toolbar>
+</div>
+<div class="form align-items-center flex flex-column">
+    <span class="p-input-icon-left">
+        <i class="pi pi-envelope"></i>
+        <input type="email" placeholder="Enter Your Email" pInputText [(ngModel)]="email" id="">
+    </span>
+    <span class="p-input-icon-left">
+        <i class="pi pi-user"></i>
+        <input type="text" placeholder="User Name" pInputText [(ngModel)]="username" id="">
+    </span>
+    <span class="p-input-icon-left">
+        <i class="pi pi-verified"></i>
+        <input type="password" placeholder="Password" [(ngModel)]="password" pInputText name="" id="">
+    </span>
+    <button pButton  (click)="signUp()" (window:keyUp.enter)="signUp()"  label="SignUp"></button>
+</div>
+

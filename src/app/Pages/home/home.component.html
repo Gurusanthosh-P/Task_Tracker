@@ -1,0 +1,18 @@
+<div class="navbar">
+    <p-toolbar>
+        <ng-template pTemplate="start">
+        </ng-template>
+        <ng-template pTemplate="center">
+            <div class="flex flex-wrap align-items-center gap-3">
+                <h1>Task Manager</h1>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="end">
+            <div class="flex align-items-center user-access">
+                <button pButton id="log" label="Logout" icon="pi pi-sign-out" (click)="logout()"></button>
+            </div>
+        </ng-template>
+    </p-toolbar>
+</div>
+
+<app-home-page></app-home-page>

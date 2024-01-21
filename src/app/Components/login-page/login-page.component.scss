@@ -1,0 +1,75 @@
+::ng-deep .p-toolbar {
+    display: flex;
+    justify-content:space-evenly ;
+    border-radius: 1rem;
+    border: transparent;
+    margin: 20px auto;
+    color: white;
+    background: transparent;
+    h1{
+        padding-left: 50px;
+    }
+    span{
+        cursor: pointer;
+    }
+    #log{
+        padding: 10px;
+        background-color: transparent;
+        border-color: white;
+    }    
+    #log:hover{
+        background-color: #514b4b;
+        color: white;
+        border-radius: 10px;
+        padding: 10px;
+    }
+  }
+
+
+.head
+{
+    text-align: center;
+    color: white;
+    margin: 0 auto;
+}
+
+.form {
+    margin-top: 50px;
+
+    i {
+        color: white;
+    }
+
+    input {
+        background-color: transparent;
+        border-color: white;
+        font-weight: bold;
+        color: white;
+
+        &::placeholder {
+            color: white;
+        }
+    }
+
+    span,
+    button {
+        letter-spacing: 2px;
+        margin-top: 30px;
+    }
+
+    button {
+        border-color: white;
+        background-color: transparent;
+    }
+
+    &::ng-deep .p-dropdown{
+            width: 240px;
+            background-color: transparent;
+            border-color: white;
+            color: white;
+
+            .p-placeholder {
+                color: white;
+            }
+    }
+}

@@ -1,0 +1,51 @@
+.card {
+    width: 80%;
+    margin: 50px auto;
+    border-radius: 10px;
+  
+    .p-dialog {
+      .field {
+        margin-bottom: 20px;
+  
+        label {
+          display: block;
+          margin-bottom: 5px;
+        }
+  
+        input,
+        textarea,
+        p-dropdown {
+          width: 100%;
+          padding: 8px;
+          box-sizing: border-box;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          margin-top: 5px;
+  
+          &:focus {
+            outline: none;
+            border-color: #66afe9;
+          }
+        }
+  
+        .p-inputNumber {
+          width: 100%;
+        }
+  
+        .col-6 {
+          width: 50%;
+        }
+      }
+    }
+  }
+  
+  #hide{
+    background-color: rgb(209, 6, 6);
+    border-color: transparent;
+  }
+
+  #save{
+    background-color: rgb(64, 163, 64);
+    border-color: transparent;
+    color: white;
+  }
