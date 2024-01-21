@@ -36,6 +36,9 @@ export class LoginPageComponent implements OnInit{
       console.log(this.username,this.password);
       Swal.fire('Login Success','Welcome','success')
     }
+    else{
+      Swal.fire('Login Falied','Use User for Login','error')
+    }
   }
 
   signup(){    
