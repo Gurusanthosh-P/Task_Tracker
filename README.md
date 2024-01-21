@@ -1,26 +1,35 @@
 # TastTracker
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.11.
+## Step 1: Download the Project
+Go to the GitHub repository of the project.
 
-## Development server
+Click on the "Code" button and select "Download ZIP."
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Save the ZIP file to your computer.
 
-## Code scaffolding
+## Step 2: Extract the Project Files
+Extract the downloaded ZIP file to a location of your choice.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Step 3: Open the Project in VS Code
+Open Visual Studio Code (VS Code).
 
-## Build
+In VS Code, click on "File" > "Open Folder" and select the folder where you extracted the project files.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Step 4: Open the Terminal
+In VS Code, open the integrated terminal by clicking on "View" > "Terminal" or using the keyboard shortcut 'Ctrl +'''' .
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Step 5: Install Node Packages
+In the terminal, navigate to the project directory:
+  --cd path/to/your/project
+  
+Run the following command to install the required Node packages:
+  --npm install
+  
+## Step 6: Run the Angular Project
+After the installation is complete, start the development server by running:
+  --ng serve
+  
+Once the compilation is finished, open your web browser and navigate to http://localhost:4200/ to view the website.
 
 ## Further help
 
