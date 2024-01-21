@@ -1,5 +1,8 @@
 # TastTracker
+# Overview
+Effortlessly manage tasks with this user-friendly app. Log in to view, edit, and delete tasks, or add new ones seamlessly. Explore insightful statistics for a quick overview of task statuses. Stay organized and boost your productivity with our Task Tracker App
 
+# How To Run The Project
 ## Step 1: Download the Project
 Go to the GitHub repository of the project.
 
