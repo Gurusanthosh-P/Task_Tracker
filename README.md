@@ -23,7 +23,7 @@ In the terminal, navigate to the project directory:
   --cd path/to/your/project
   
 Run the following command to install the required Node packages:
-  --npm install
+  --npm install --force
   
 ## Step 6: Run the Angular Project
 After the installation is complete, start the development server by running:
