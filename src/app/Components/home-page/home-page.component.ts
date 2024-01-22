@@ -33,7 +33,6 @@ export class HomePageComponent {
 
   ngOnInit() {
       this.getData()
-      this.getDataFromApi()
   }
 
   getData(){
@@ -148,19 +147,5 @@ export class HomePageComponent {
 
 
 
-  getDataFromApi() {
-    
-    const url = 'https://8fb6-136-185-177-167.ngrok-free.app/api/User/alltasks';
-
-    this.http.get(url, {
-      headers: {
-        'Accept': 'application/text'
-      }
-    })
-    .subscribe((data: any) => {
-      console.log(data); 
-    }, error => {
-      console.error('Error:', error);
-    });
-  }
+  
 }

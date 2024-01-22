@@ -23,9 +23,7 @@ export class LoginPageComponent implements OnInit{
   }
 
   dropDownAssign(){
-    this.User = user
-    console.log(this.User);
-    
+    this.User = user    
   }
 
 
