@@ -31,6 +31,7 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { DataViewModule } from 'primeng/dataview';
 import { SignupComponent } from './Pages/signup/signup.component';
 import { SignupformComponent } from './Components/signupform/signupform.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 @NgModule({
@@ -62,7 +63,8 @@ import { SignupformComponent } from './Components/signupform/signupform.componen
     InputNumberModule,
     ConfirmDialogModule,
     ConfirmPopupModule,
-    DataViewModule
+    DataViewModule,
+    NgxSpinnerModule
   ],
   providers: [MessageService,ProductService,ConfirmationService],
   bootstrap: [AppComponent]

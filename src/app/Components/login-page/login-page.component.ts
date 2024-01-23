@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpService } from 'src/app/Services/http/http.service';
 import { user } from 'src/app/contents/loginPage/loginpage';
+import { message, messages } from 'src/app/messages/messages';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -8,38 +10,53 @@ import Swal from 'sweetalert2';
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss']
 })
-export class LoginPageComponent implements OnInit{
+export class LoginPageComponent implements OnInit {
 
-  User:any[]=[]
-  username:string=''
-  password:string=''
-  selectedUser:any
+  User: any[] = []
+  username: string = ''
+  password: string = ''
+  selectedUser: any
 
-
-  constructor(private router:Router){}
+  postData = {
+    userName: "",
+    password: ""
+  }
+  constructor(private router: Router, private httpService: HttpService) { }
 
   ngOnInit(): void {
     this.dropDownAssign()
   }
 
-  dropDownAssign(){
-    this.User = user    
+  dropDownAssign() {
+    localStorage?.removeItem('token')
+    this.User = user
   }
 
 
-  login(){
-    if(this.selectedUser.name == 'User')
-    {
-      this.router.navigate(['home'])
-      console.log(this.username,this.password);
-      Swal.fire('Login Success','Welcome','success')
+  login() {
+    if (this.username && this.password && this.selectedUser?.name == 'User') {
+      this.postData = {
+        userName: this.username,
+        password: this.password
+      }
+      this.httpService.userLogin(this.postData).subscribe({
+        next: (response: any) => {
+          localStorage.setItem('token', response?.token)
+          Swal.fire(message?.loginSuccess, message?.welcome, 'success')
+          this.router.navigate(['home'])
+        },
+        error: (error: any) => {
+          console.log(error);
+          Swal.fire(error?.name, messages?.auth, 'error')
+        }
+      })
     }
-    else{
-      Swal.fire('Login Falied','Use User for Login','error')
+    else {
+      Swal.fire(message?.LoginFailed, message?.Error, 'error')
     }
   }
 
-  signup(){    
+  signup() {
     this.router.navigate(['signup'])
   }
 }

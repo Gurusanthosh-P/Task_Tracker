@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit{
   }
 
   logout(){
+    localStorage.removeItem('token')
     Swal.fire('Logout Success','Thank You','success')
     this.router.navigate(['login'])
   }

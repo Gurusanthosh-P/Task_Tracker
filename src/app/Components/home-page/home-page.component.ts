@@ -1,151 +1,166 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { HttpService } from 'src/app/Services/http/http.service';
 import { LoaderService } from 'src/app/Services/loader/loader.service';
 import { ProductService } from 'src/app/Services/userData/product.service';
+import { dialogHeader, tableHeader, tableKeys } from 'src/app/contents/homepage/homepage';
+import { messages } from 'src/app/messages/messages';
+import { apiUrl } from 'src/app/urls/apiUrl';
+import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-home-page',
-  templateUrl: './home-page.component.html',
-  styleUrls: ['./home-page.component.scss']
+    selector: 'app-home-page',
+    templateUrl: './home-page.component.html',
+    styleUrls: ['./home-page.component.scss']
 })
 export class HomePageComponent {
-  productDialog: boolean = false;
+    tableKeys = tableKeys
+    dialogHeader = dialogHeader
+    tableHeader = tableHeader
+    productDialog: boolean = false;
+    statisticsDialog: boolean = false
+    products!: any[];
+    product!: any;
+    statuses!: any[];
+    statistics: any
 
-  statisticsDialog:boolean= false
+    constructor(
+        private httpService: HttpService,
+        private messageService: MessageService,
+        private confirmationService: ConfirmationService,
+        private loaderService: LoaderService) { }
 
-  products!: any[];
+    ngOnInit() {
+        if(localStorage.getItem('token'))
+        {
+            this.getData()
+        }
+    }
 
-  product!: any;
+    getData() {
+        this.loaderService?.loadingShow()
+        this.httpService.getUserTask().subscribe({
+            next: (response: any) => {
+                this.products = response
+                this.loaderService?.loadingHide()
+            },
+            error: (error: any) => {
+                this.loaderService?.loadingHide()
+                Swal.fire(error?.name, messages?.try, 'error')
+            }
+        })
 
-  selectedProducts!: any[] | null;
+        this.statuses = [
+            { label: 'COMPLETED', value: 'COMPLETED' },
+            { label: 'INPROGRESS', value: 'INPROGRESS' },
+            { label: 'TO DO', value: 'TO DO' },
+        ];
+    }
 
-  submitted: boolean = false;
+    openNew() {
+        this.productDialog = true;
+        this.product = {};
+    }
 
-  statuses!: any[];
-
-  constructor(
-    private productService: ProductService, 
-    private messageService: MessageService, 
-    private confirmationService: ConfirmationService,
-    private http:HttpClient,
-    private loaderService:LoaderService) {}
-
-  ngOnInit() {
-      this.getData()
-  }
-
-  getData(){
-    this.productService.getProducts().then((data:any) => (this.products = data));
-
-    this.statuses = [
-        { label: 'COMPLETE', value: 'COMPLETE' },
-        { label: 'INPROGRESS', value: 'INPROGRESS' },
-        { label: 'DELAY', value: 'DELAY' }
-    ];
-  }
-
-  openNew() {
-      this.productDialog = true;
-      this.product = {};
-      this.submitted = false;
-  }
-
-  showStatistics(){
-    this.statisticsDialog = true
-  }
-
-  deleteSelectedProducts() {
-      this.confirmationService.confirm({
-          message: 'Are you sure you want to delete the selected products?',
-          header: 'Confirm',
-          icon: 'pi pi-exclamation-triangle',
-          accept: () => {
-              this.products = this.products.filter((val) => !this.selectedProducts?.includes(val));
-              this.selectedProducts = null;
-              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Task Deleted', life: 3000 });
-          }
-      });
-  }
-
-  editProduct(product: any) {
-      this.product = { ...product };
-      this.productDialog = true;
-  }
-
-  deleteProduct(product: any) { 
-       
-      this.confirmationService.confirm({        
-          message: 'Are you sure you want to delete ' + product.name + '?',
-          header: 'Confirm',
-          icon: 'pi pi-exclamation-triangle',
-          accept: () => {
-              this.products = this.products.filter((val) => val.id !== product.id);
-              this.product = {};
-              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Task Deleted', life: 3000 });
-          }
-      });
-  }
-
-  hideDialog() {
-      this.productDialog = false;
-      this.submitted = false;
-  }
-
-  saveProduct() {
-      this.submitted = true;
-
-      if (this.product.name?.trim()) {
-          if (this.product.id) {
-              this.products[this.findIndexById(this.product.id)] = this.product;
-              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Task Updated', life: 3000 });
-          } else {
-              this.product.id = this.createId();
-              this.product.image = 'product-placeholder.svg';
-              this.products.push(this.product);
-              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Task Created', life: 3000 });
-          }
-
-          this.products = [...this.products];
-          this.productDialog = false;
-          this.product = {};
-      }
-  }
-
-  findIndexById(id: string): number {
-      let index = -1;
-      for (let i = 0; i < this.products.length; i++) {
-          if (this.products[i].id === id) {
-              index = i;
-              break;
-          }
-      }
-      return index;
-  }
-
-  createId(): string {
-      let id = '';
-      var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      for (var i = 0; i < 5; i++) {
-          id += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      return id;
-  }
-
-  getSeverity(status: string):any {            
-      switch (status) {
-          case 'COMPLETE':
-              return 'success';
-          case 'INPROGRESS':
-              return 'warning';
-          case 'DELAY':
-              return 'danger';
-          default:
-            break
-      }
-  }
+    showStatistics() {
+        this.statisticsDialog = true
+        this.loaderService?.loadingShow()
+        this.httpService?.getStatistics().subscribe({
+            next: (response: any) => {
+                this.statistics = response
+                this.loaderService?.loadingHide()
+            },
+            error: (error: any) => {
+                this.loaderService?.loadingHide()
+                Swal.fire(error?.name, messages?.try, 'error')
+            }
+        })
+    }
 
 
+    editProduct(product: any) {
+        this.product = { ...product };
+        this.productDialog = true;
+    }
 
-  
+    deleteProduct(product: any, taskid: any) {
+        console.log(taskid);
+        
+        this.confirmationService.confirm({
+            message: 'Are you sure you want to delete ' + product.title + '?',
+            header: 'Confirm',
+            icon: 'pi pi-exclamation-triangle',
+            accept: () => {
+                this.loaderService?.loadingShow()
+                this.httpService?.deleteTask(taskid).subscribe({
+                    next: (response: any) => {
+                        this.loaderService?.loadingHide()
+                        this.messageService?.add({ severity: 'success', summary: 'Successful', detail: 'Task Deleted', life: 3000 });
+                        this.getData()
+                    },
+                    error: (error: any) => {
+                        this.loaderService?.loadingHide()
+                        Swal.fire(error?.name, messages?.try, 'error')
+                    }
+                })
+            }
+        });
+    }
+
+    hideDialog() {
+        this.productDialog = false;
+    }
+
+    saveProduct(taskid: any) {
+        this.loaderService?.loadingShow()
+        if (this.product?.title?.trim()) {
+            if (this.product.id) {
+                this.httpService?.editTask(this.product, taskid).subscribe({
+                    next: (response: any) => {
+                        this.loaderService?.loadingHide()
+                        this.messageService?.add({ severity: 'success', summary: 'Successful', detail: 'Task Updated', life: 3000 });
+                        this.getData()
+                    },
+                    error: (error: any) => {
+                        this.loaderService?.loadingHide()
+                        this.messageService.add({ severity: 'primary', summary: 'Failed', detail: 'Task Updated Failed', life: 3000 })
+                    }
+                })
+            }
+            else {
+                console.log(this.product);
+                
+                this.httpService.createTask(this.product).subscribe({
+                    next: (response: any) => {
+                        
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Task Created', life: 3000 });
+                        this.getData()
+                    },
+                    error: (error: any) => {
+                        this.messageService.add({ severity: 'primary', summary: 'Failed', detail: 'Task Created Failed', life: 3000 })
+                    }
+                })
+            }
+
+            this.productDialog = false;
+            this.product = {};
+        }
+    }
+    getSeverity(status: string): any {
+        switch (status) {
+            case 'COMPLETED':
+                return 'success';
+            case 'INPROGRESS':
+                return 'warning';
+            case 'TO DO':
+                return 'danger';
+            default:
+                return '-'
+        }
+    }
+
+
+
+
 }

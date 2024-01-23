@@ -1,3 +1,4 @@
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "timer" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
 <p-confirmDialog></p-confirmDialog>
 <p-toast></p-toast>
 
@@ -6,62 +7,65 @@
         #dt
         [value]="products"
         [rows]="10"
-        [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
-        [(selection)]="selectedProducts"
+        [globalFilterFields]="['title', 'description', 'duedate', 'status']"
         [rowHover]="true"
         dataKey="id"
     >
     <ng-template pTemplate="caption">
         <div class="flex align-items-center justify-content-between">
-            <h3 class="mr-auto">Manage Tasks</h3>
+            <h3 class="mr-auto">{{tableHeader.heading}}</h3>
             <span class="p-input-icon-left inline-flex">
                 <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
-                <button pButton pRipple label="Statistics" icon="pi pi-book" class="p-button-primary mr-2" (click)="showStatistics()"></button>
+                <button pButton pRipple label="Statistics" icon="pi pi-book" class="p-button-secondary mr-2" (click)="showStatistics()"></button>
             </span>
         </div>
     </ng-template>
         <ng-template pTemplate="header">
             <tr>
-                <th pSortableColumn="name" style="min-width:15rem">Title <p-sortIcon field="name"></p-sortIcon></th>
-                <th pSortableColumn="price">Description <p-sortIcon field="price"></p-sortIcon></th>
-                <th pSortableColumn="category" style="min-width:10rem">Due Date <p-sortIcon field="category"></p-sortIcon></th>
-                <th pSortableColumn="inventoryStatus" style="min-width:10rem">Status <p-sortIcon field="inventoryStatus"></p-sortIcon></th>
+                <th pSortableColumn="title" style="min-width:15rem">{{tableHeader.Title}} <p-sortIcon field="title"></p-sortIcon></th>
+                <th pSortableColumn="description">{{tableHeader.Description}} <p-sortIcon field="description"></p-sortIcon></th>
+                <th pSortableColumn="dueDate" style="min-width:10rem">{{tableHeader.DueDate}}  <p-sortIcon field="dueDate"></p-sortIcon></th>
+                <th pSortableColumn="status" style="min-width:10rem">{{tableHeader.Status}} <p-sortIcon field="status"></p-sortIcon></th>
                 <th></th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-product>
-            <tr>
-                <td>{{ product.name }}</td>
-                <td>{{ product.description }}</td>
-                <td>{{ product.duedate}}</td>
+            <tr *ngIf="products && products.length > 0">
+                <td *ngFor="let keys of tableKeys">
+                    {{ product[keys]}}
+                </td>
                 <td>
-                    <p-tag [value]="product.inventoryStatus" [severity]="getSeverity(product.inventoryStatus)"></p-tag>
+                    <p-tag [value]="product.status" [severity]="getSeverity(product.status)"></p-tag>
                 </td>
                 <td>
                     <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProduct(product)"></button>
-                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProduct(product)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProduct(product, product.id)"></button>
                 </td>
+            </tr>
+            <tr *ngIf="!products || products.length === 0">
+                <td colspan="5">{{dialogHeader.notask}}</td>
             </tr>
         </ng-template>
     </p-table>
 </div>
+
 <p-dialog [(visible)]="productDialog" [style]="{ width: '500px' }" header="Manage Task"  styleClass="p-fluid">
     <ng-template pTemplate="content">
         <div class="field">
-            <label for="name">Name</label>
-            <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
-            <small class="p-error" *ngIf="submitted && !product.name">Name is required.</small>
+            <label for="name">{{dialogHeader.title}}</label>
+            <input type="text" pInputText id="name" [(ngModel)]="product.title" required autofocus />
+            <small class="p-error" *ngIf="!product.title">{{dialogHeader.required}}</small>
         </div>
         <div class="field">
-            <label for="description">Description</label>
+            <label for="description">{{dialogHeader.description}}</label>
             <textarea id="description" pInputTextarea [(ngModel)]="product.description" required rows="3" cols="20"></textarea>
         </div>
 
         <div class="field">
-            <label for="inventoryStatus">Inventory Status</label>
-            <p-dropdown [(ngModel)]="product.inventoryStatus" inputId="inventoryStatus" [options]="statuses">
+            <label for="Status">{{dialogHeader.status}}</label>
+            <p-dropdown [(ngModel)]="product.status"  [options]="statuses">
                 <ng-template pTemplate="selectedItem">
-                     <p-tag [value]="product.inventoryStatus.toUpperCase()" [severity]="getSeverity(product.inventoryStatus.toUpperCase())"></p-tag>
+                    <p-tag [value]="product.status ? product.status.toUpperCase() : ''" [severity]="getSeverity(product.status ? product.status.toUpperCase() : '')"></p-tag>
                 </ng-template>
                 <ng-template let-option pTemplate="item">
                      <p-tag [value]="option.label" [severity]="getSeverity(option.label)"></p-tag> 
@@ -70,10 +74,10 @@
         </div>
 
         <div class="field">
-            <label class="mb-3">Due Date</label>
+            <label class="mb-3">{{dialogHeader.duedate}}</label>
             <div>
                 <div class="field">
-                    <input type="text" pInputText id="name" [(ngModel)]="product.duedate" required autofocus />
+                    <input type="date" pInputText id="name" [(ngModel)]="product.dueDate" required autofocus />
                 </div>
             </div>
         </div>
@@ -82,7 +86,7 @@
     <ng-template pTemplate="footer">
         <div class="p-d-flex p-jc-end">
             <button pButton id="hide" pRipple label="Cancel" icon="pi pi-times" (click)="hideDialog()"></button>
-            <button pButton id="save" pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
+            <button pButton id="save" pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProduct(product.id)"></button>
         </div>
     </ng-template>
 </p-dialog>
@@ -91,17 +95,19 @@
     <ng-template pTemplate="content">
         <div class="field">        
             <div class="card">
-                <p-dataView #dv [value]="products">
-                    <ng-template pTemplate="list" let-products>
+                <p-dataView #dv [value]="statistics">
+                    <ng-template pTemplate="list">
                         <div class="grid">
-                            <div class="col-12" *ngFor="let item of products; let first = first">
-                                <div class="flex flex-column xl:flex-row xl:align-items-start p-2 gap-4" [ngClass]="{ 'border-top-1 surface-border': !first }">
+                            <div class="col-12">
+                                <div class="flex flex-column xl:flex-row xl:align-items-start p-2 gap-4">
                                     <div class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
-                                        <div class="flex flex-column align-items-center sm:align-items-start gap-3">
-                                            <div class="text-xl font-bold text-700">{{ item.name }}</div>
+                                        <div class="flex flex-column align-items-center sm:align-items-center gap-3">
+                                            <h3>Total Tasks</h3>
+                                            <div class="text-xl font-bold text-semibold">{{statistics?.totalTasks}}</div>
                                         </div>
-                                        <div class="flex sm:flex-column align-items-center sm:align-items-end gap-3">
-                                            <span class="text-xl font-semibold">{{  item.inventoryStatus }}</span>
+                                        <div class="flex sm:flex-column align-items-center sm:align-items-center gap-3">
+                                            <h3>Completed Tasks</h3>
+                                            <span class="text-xl font-semibold">{{statistics?.completedTasks}}</span>
                                         </div>
                                     </div>
                                 </div>

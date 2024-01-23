@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable({
   providedIn: 'root',
@@ -7,22 +7,12 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 export class LoaderService {
   private loadingDialog: any;
 
-  constructor(
-    private confirmationService: ConfirmationService,
-  ) {}
+  constructor(private load:NgxSpinnerService) { }
 
-  showLoading() {
-    this.loadingDialog = this.confirmationService.confirm({
-      header: 'Loading',
-      message: `<p-progressSpinner></p-progressSpinner>`,
-      acceptVisible: false,
-      rejectVisible: false,
-    });
+  loadingShow(){
+    this.load.show()
   }
-
-  hideLoading() {
-    if (this.loadingDialog) {
-      this.loadingDialog.close();
-    }
+  loadingHide(): void {
+    this.load.hide();
   }
 }
