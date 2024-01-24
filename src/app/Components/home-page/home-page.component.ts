@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { HttpService } from 'src/app/Services/http/http.service';
 import { LoaderService } from 'src/app/Services/loader/loader.service';
@@ -26,36 +27,47 @@ export class HomePageComponent {
     statistics: any
 
     constructor(
+        private router:Router,
         private httpService: HttpService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
         private loaderService: LoaderService) { }
 
     ngOnInit() {
-        if(localStorage.getItem('token'))
-        {
-            this.getData()
-        }
+        
+        this.getData()
+        
     }
 
     getData() {
         this.loaderService?.loadingShow()
-        this.httpService.getUserTask().subscribe({
-            next: (response: any) => {
-                this.products = response
-                this.loaderService?.loadingHide()
-            },
-            error: (error: any) => {
-                this.loaderService?.loadingHide()
-                Swal.fire(error?.name, messages?.try, 'error')
+        if(!localStorage.getItem('token'))
+        {
+            Swal.fire(messages?.auth,messages.logintry,'error')
+            this.loaderService.loadingHide()
+            if(Swal)
+            {
+                this.router.navigate([''])
             }
-        })
-
-        this.statuses = [
-            { label: 'COMPLETED', value: 'COMPLETED' },
-            { label: 'INPROGRESS', value: 'INPROGRESS' },
-            { label: 'TO DO', value: 'TO DO' },
-        ];
+        }
+        else{
+            this.httpService.getUserTask().subscribe({
+                next: (response: any) => {
+                    this.products = response
+                    this.loaderService?.loadingHide()
+                },
+                error: (error: any) => {
+                    this.loaderService?.loadingHide()
+                    Swal.fire(error?.name, messages?.refresh, 'error')
+                }
+            })
+    
+            this.statuses = [
+                { label: 'COMPLETED', value: 'COMPLETED' },
+                { label: 'INPROGRESS', value: 'INPROGRESS' },
+                { label: 'TO DO', value: 'TO DO' },
+            ];
+        }
     }
 
     openNew() {

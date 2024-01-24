@@ -1,4 +1,4 @@
-const api = 'https://6593-103-84-178-185.ngrok-free.app'
+const api = 'https://a9e8-103-84-178-185.ngrok-free.app'
 
 export const apiUrl = {
     userSignUp : `${api}/api/User/register `,

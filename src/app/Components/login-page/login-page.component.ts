@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpService } from 'src/app/Services/http/http.service';
+import { LoaderService } from 'src/app/Services/loader/loader.service';
 import { user } from 'src/app/contents/loginPage/loginpage';
 import { message, messages } from 'src/app/messages/messages';
 import Swal from 'sweetalert2';
@@ -21,7 +22,7 @@ export class LoginPageComponent implements OnInit {
     userName: "",
     password: ""
   }
-  constructor(private router: Router, private httpService: HttpService) { }
+  constructor(private router: Router, private httpService: HttpService,private loaderService:LoaderService) { }
 
   ngOnInit(): void {
     this.dropDownAssign()
@@ -34,6 +35,7 @@ export class LoginPageComponent implements OnInit {
 
 
   login() {
+    this.loaderService.loadingShow()
     if (this.username && this.password && this.selectedUser?.name == 'User') {
       this.postData = {
         userName: this.username,
@@ -43,6 +45,7 @@ export class LoginPageComponent implements OnInit {
         next: (response: any) => {
           localStorage.setItem('token', response?.token)
           Swal.fire(message?.loginSuccess, message?.welcome, 'success')
+          this.loaderService.loadingHide()
           this.router.navigate(['home'])
         },
         error: (error: any) => {

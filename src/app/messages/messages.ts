@@ -3,7 +3,9 @@ export const messages = {
     thankyou:'Thank You',
     fail : 'Failed',
     try : 'Try Again',
-    auth:'Check Authentication'
+    auth:'Check Authentication',
+    logintry:'Try to login Again',
+    refresh:'Please Refresh the Page'
 }
 
 
@@ -23,5 +25,7 @@ export const message={
 
     login:'Login',
     logout:'Logout'
+
+
 }
 
